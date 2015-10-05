@@ -27,18 +27,16 @@ if (count($departments) == 0) {
         <td><?php echo $dep['ManagedBy']['name']; ?></td>
         <td>
         <?php
-            // add link to Employees later
+            // add controller and action to Employees link later
             echo $this->Html->link(
                 'Employees', 
-                    array(
-                        'controller' => '#', 
-                        'action' => '#'
-                    ), 
-                    array(
-                        'class' => array(
-                            'btn', 'btn-primary')
-                        )
-                    );
+                array(
+                    'controller' => '#',
+                    'action' => '#'),
+                array(
+                    'class' => array('btn', 'btn-primary')
+                )
+            );
             echo $this->Html->link(
                 'Edit',
                 array(
@@ -50,20 +48,22 @@ if (count($departments) == 0) {
                     'class' => array('btn', 'btn-warning')
                 )
             );
-            echo $this->Html->link(
-                'Delete',
+            echo $this->Form->postLink(
+                __('Delete'),
                 array(
-                    'controller' => 'departments',
                     'action' => 'delete', 
                     $dep['Department']['id']
                 ),
                 array(
                     'class' => array('btn', 'btn-danger')
-                )
+                ),
+                __('Are you sure you want to delete department "%s"?', $dep['Department']['name'])
             );
+
         ?>
         </td>
     </tr>
     <?php endforeach; ?>
 </table>
-<?php } ?>
+<?php } 
+echo $this->Html->link("Add departments", array('controller' => 'departments', 'action' => 'add')); ?>

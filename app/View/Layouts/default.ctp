@@ -36,7 +36,13 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 </head>
 <body>
     <!-- add navbar here later -->
-
+    <div id="header" class="container">
+        <?php echo $this->Html->link("Departments", array('controller' => 'departments', 'action' => 'index')); ?>
+        &nbsp;
+        <?php echo $this->Html->link("Employees", array('controller' => 'employees', 'action' => 'index')); ?>
+        &nbsp;
+        <?php echo $this->Html->link("Login", array('controller' => 'user', 'action' => 'login')); ?>
+    </div>
     <div id="content" class="container">
 
         <?php echo $this->Flash->render(); ?>
