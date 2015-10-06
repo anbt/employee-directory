@@ -1,11 +1,15 @@
 <?php
 
 App::uses('AppController', 'Controller');
+App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 
 class DepartmentsController extends AppController
 {
-    public $components = array('Flash');
-    
+    public function beforeFilter() {
+        parent::beforeFilter();
+        $this->Auth->allow("detail");
+    }
+
     public function index()
     {
         // set recursive = 0 to retrive employee's relationship

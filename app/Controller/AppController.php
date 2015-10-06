@@ -32,4 +32,36 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller
 {
+    public $components = array(
+        'Flash',
+        'Auth' => array(
+            // users/login for login form
+            'loginAction' => array(
+                'controller' => 'users',
+                'action' => 'login',
+            ),
+            'authenticate' => array('Form'),
+            // after login redirect to /departments/
+            'loginRedirect' => array(
+                'controller' => 'departments',
+                'action' => 'index',
+            ),
+            // after logout redirect to /users/login
+            'logoutRedirect' => array(
+                'controller' => 'users',
+                'action' => 'login',
+            )
+        )
+    );
+    
+    public function beforeFilter()
+    {
+        $this->Auth->allow("index");
+    }
+    
+    // send loggedIn info to views before rendering them
+    public function beforeRender()
+    {
+        $this->set('loggedIn', $this->Auth->loggedIn() );
+    }
 }

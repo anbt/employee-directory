@@ -12,7 +12,9 @@ if (count($departments) == 0) {
         <th>Name</th>
         <th>Office Number</th>
         <th>Manager</th>
+<?php if ($loggedIn) : ?>
         <th>Action</th>
+<?php endif; ?>
     </tr>
     
 <?php foreach($departments as $dep): ?>
@@ -25,6 +27,7 @@ if (count($departments) == 0) {
         </td>
         <td><?php echo $dep['Department']['office_phone']; ?></td>
         <td><?php echo $dep['ManagedBy']['name']; ?></td>
+<?php if ($loggedIn) : ?>
         <td>
         <?php
             // add controller and action to Employees link later
@@ -62,8 +65,12 @@ if (count($departments) == 0) {
 
         ?>
         </td>
+<?php endif; ?>
     </tr>
     <?php endforeach; ?>
 </table>
-<?php } 
-echo $this->Html->link("Add departments", array('controller' => 'departments', 'action' => 'add')); ?>
+<?php }
+if ($loggedIn) {
+    echo $this->Html->link("Add departments", array('controller' => 'departments', 'action' => 'add'));
+}
+?>
