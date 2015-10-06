@@ -71,6 +71,6 @@ if (count($departments) == 0) {
 </table>
 <?php }
 if ($loggedIn) {
-    echo $this->Html->link("Add departments", array('controller' => 'departments', 'action' => 'add'));
+    echo $this->Html->link("Add department", array('controller' => 'departments', 'action' => 'add'));
 }
 ?>

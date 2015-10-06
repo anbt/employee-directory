@@ -41,11 +41,6 @@ class AppController extends Controller
                 'action' => 'login',
             ),
             'authenticate' => array('Form'),
-            // after login redirect to /departments/
-            'loginRedirect' => array(
-                'controller' => 'departments',
-                'action' => 'index',
-            ),
             // after logout redirect to /users/login
             'logoutRedirect' => array(
                 'controller' => 'users',
