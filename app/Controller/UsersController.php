@@ -5,6 +5,14 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 
 class UsersController extends AppController
 {
+    public function beforeFilter()
+    {
+        // allow logout even having not changed pass
+        if ($this->request->action != 'logout') {
+            parent::beforeFilter();
+        }
+    }
+    
     public function login()
     {
         if ($this->request->is(array("post"))) {
@@ -51,6 +59,19 @@ class UsersController extends AppController
                 $this->Flash->fail('Cannot add this user.');
             }
         }
+    }
+    
+    public function changePass()
+    {
+        if ($this->request->is(array("post", "put"))) {
+            $this->User->id = $this->Auth->user('id');
+            if ($this->User->save($this->request->data)) {
+                $this->Flash->success('You changed pass successfully. You should login again to make sure');
+                return $this->redirect(array('controller' => 'users', 'action' => 'logout'));
+            } else {
+                $this->Flash->fail('Your change is not successful.');
+            }
+        } 
     }
     
     // generate pass with length provided

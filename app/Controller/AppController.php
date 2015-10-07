@@ -52,6 +52,22 @@ class AppController extends Controller
     public function beforeFilter()
     {
         $this->Auth->allow("index");
+        
+        if ($this->Auth->loggedIn()) {
+            $this->Auth->allow("changePass");
+            if (
+                $this->Auth->user("changed_pass") != true
+                && (
+                    $this->request->controller != "users"
+                    || $this->request->action != "changePass"
+                )
+            ) {
+                /* logged in and have not changed initial pass,
+                 * redirect to changePass if try to access another action
+                 */
+                return $this->redirect(array('controller' => 'users', 'action' => 'changePass'));
+            }
+        }
     }
     
     // send loggedIn info to views before rendering them

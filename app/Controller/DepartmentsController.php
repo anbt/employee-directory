@@ -1,7 +1,6 @@
 <?php
 
 App::uses('AppController', 'Controller');
-App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 
 class DepartmentsController extends AppController
 {
