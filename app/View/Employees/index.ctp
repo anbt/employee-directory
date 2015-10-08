@@ -2,10 +2,26 @@
 
 <?php
 if (count($employees) == 0) :
-    echo "<p>There is no employee</p>";
+    echo "<p>There is no employee.</p>";
 else :
+    echo $this->Form->create('Employee', array('type' => 'get'));
+    echo $this->Form->input('name',
+        array(
+            'placeholder' => 'Employee Name',
+            'label' => false,
+            'required' => false
+        )
+    );
+    echo $this->Form->input('department_id', array(
+        'options' => $departments,
+        'empty' => 'Departments',
+        'label' => false
+    ));
+    echo $this->Form->button('Search', array('type' => 'submit'));
+    echo $this->Form->button('Clear', array('type' => 'reset'));
+    echo $this->Form->end();
 ?>
-
+<br>
 <table class="table table-stripped table-responsive">
     <tr>
         <th>#</th>
