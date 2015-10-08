@@ -19,14 +19,6 @@ class DepartmentsController extends AppController
     
     public function add()
     {
-        // get employess to choose a manager in form
-        $ems = $this->Department->Employees->getAllEmployees();
-        $managers = array();
-        foreach ($ems as $em) {
-            $managers[$em['Employees']['id']] = $em['Employees']['name'];
-        }
-        $this->set("managers", $managers);
-
         if ($this->request->is(array("post", "put"))) {
             $this->Department->create();
             if ($this->Department->save($this->request->data)) {
@@ -35,6 +27,14 @@ class DepartmentsController extends AppController
             }
             $this->Flash->fail('Cannot add this department.');
         }
+        
+        // get employess to choose a manager in form
+        $ems = $this->Department->Employees->getAllEmployees();
+        $managers = array();
+        foreach ($ems as $em) {
+            $managers[$em['Employees']['id']] = $em['Employees']['name'];
+        }
+        $this->set("managers", $managers);
     }
     
     public function detail($id)
@@ -63,18 +63,8 @@ class DepartmentsController extends AppController
         // accessing an non-exist department is invalid
         if (!$dep) {
             throw new NotFoundException(__('Invalid department'));
-        } else {
-            $this->set('dep', $dep);
         }
         
-        // get employess to choose a manager in form
-        $ems = $this->Department->Employees->getAllEmployees();
-        $managers = array();
-        foreach ($ems as $em) {
-            $managers[$em['Employees']['id']] = $em['Employees']['name'];
-        }
-        $this->set("managers", $managers);
-            
         if ($this->request->is(array("post", "put"))) {
             $this->Department->id = $id;
             if ($this->Department->save($this->request->data)) {
@@ -84,8 +74,16 @@ class DepartmentsController extends AppController
             $this->Flash->fail('Cannot edit this department.');
         }
         
-        // populate form with data in DB
+        // get employess to choose a manager in form
+        $ems = $this->Department->Employees->getAllEmployees();
+        $managers = array();
+        foreach ($ems as $em) {
+            $managers[$em['Employees']['id']] = $em['Employees']['name'];
+        }
+        $this->set("managers", $managers);
+        
         if (!$this->request->data) {
+            // populate form with data in DB
             $this->request->data = $dep;
         }
     }
@@ -98,7 +96,7 @@ class DepartmentsController extends AppController
         }
         
         if ($this->Department->delete($id)) {
-            $this->Flash->success('A department has been edited.');
+            $this->Flash->success('A department has been deleted.');
             return $this->redirect(array('action' => 'index'));
         }
         $this->Flash->fail('Cannot delete this department.');

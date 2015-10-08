@@ -6,5 +6,5 @@ echo $this->Form->input('name');
 echo $this->Form->input('office_phone');
 echo $this->Form->label('manager_id', 'Manager');
 echo $this->Form->select('manager_id', $managers);
-echo $this->Form->end('Add');
+echo $this->Form->end('Edit');
 ?>
