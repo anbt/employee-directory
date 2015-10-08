@@ -29,11 +29,7 @@ class DepartmentsController extends AppController
         }
         
         // get employess to choose a manager in form
-        $ems = $this->Department->Employees->getAllEmployees();
-        $managers = array();
-        foreach ($ems as $em) {
-            $managers[$em['Employees']['id']] = $em['Employees']['name'];
-        }
+        $managers = $this->Department->Employees->getAllEmployeeNames();
         $this->set("managers", $managers);
     }
     
@@ -75,11 +71,7 @@ class DepartmentsController extends AppController
         }
         
         // get employess to choose a manager in form
-        $ems = $this->Department->Employees->getAllEmployees();
-        $managers = array();
-        foreach ($ems as $em) {
-            $managers[$em['Employees']['id']] = $em['Employees']['name'];
-        }
+        $managers = $this->Department->Employees->getAllEmployeeNames();
         $this->set("managers", $managers);
         
         if (!$this->request->data) {

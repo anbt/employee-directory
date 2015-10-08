@@ -97,11 +97,13 @@ class Employee extends AppModel
         return false;
     }
     
-    // get all employees in DB
-    public function getAllEmployees()
+    /* get all employees in DB
+     * (duplication of Department->getAllDepartmentNames())
+     */
+    public function getAllEmployeeNames()
     {
         $this->recursive = -1;
-        return $this->find("all", array('order' => array('name' => 'asc')));
+        return $this->find("list", array('fields' => array('id', 'name'), 'order' => array('name' => 'asc')));
     }
     
     /* create new employee with $data provided

@@ -37,11 +37,7 @@ class EmployeesController extends AppController
             $this->set("employees", $emps);
         }
         // get departments to search in "index view"
-        $deps = $this->Employee->WorkingIn->getAllDepartments();
-        $departments = array();
-        foreach ($deps as $dep) {
-            $departments[$dep['WorkingIn']['id']] = $dep['WorkingIn']['name'];
-        }
+        $departments = $this->Employee->WorkingIn->getAllDepartmentNames();
         $this->set("departments", $departments);
     }
     
@@ -56,11 +52,7 @@ class EmployeesController extends AppController
         }
         
         // get departments to choose working place for employee
-        $deps = $this->Employee->WorkingIn->getAllDepartments();
-        $departments = array();
-        foreach ($deps as $dep) {
-            $departments[$dep['WorkingIn']['id']] = $dep['WorkingIn']['name'];
-        }
+        $departments = $this->Employee->WorkingIn->getAllDepartmentNames();
         $this->set("departments", $departments);
     }
     
@@ -102,11 +94,7 @@ class EmployeesController extends AppController
         }
         
         // get departments to choose working place for employees
-        $deps = $this->Employee->WorkingIn->getAllDepartment();
-        $departments = array();
-        foreach ($deps as $dep) {
-            $departments[$dep['WorkingIn']['id']] = $dep['WorkingIn']['name'];
-        }
+        $departments = $this->Employee->WorkingIn->getAllDepartmentNames();
         $this->set("departments", $departments);
         
         if (!$this->request->data) {
