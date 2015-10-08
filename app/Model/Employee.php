@@ -57,12 +57,12 @@ class Employee extends AppModel
                     'extension',
                     array('gif', 'jpeg', 'png', 'jpg')
                 ),
-                'required' => true,
+                'required' => false,
                 'message' => 'Only upload .jpeg, .png, .jpg files.'
             ),
-            'fileSize' => array(
+            'maxFileSize' => array(
                 'rule' => array('fileSize', '<=', '100KB'),
-                'required' => true,
+                'required' => false,
                 'message' => 'Image must be less than 100KB.'
             ),
             'type' => array(
@@ -70,22 +70,22 @@ class Employee extends AppModel
                     'mimeType',
                     array('image/gif', 'image/png', 'image/jpg', 'image/jpeg')
                 ),
-                'required' => true,
+                'required' => false,
                 'message' => 'Invalid mime type.'
             ),
             'uploadError' => array(
                 'rule' => 'uploadError',
-                'required' => true,
+                'required' => false,
                 'message' => 'Something went wrong with the upload.'
             ),
             'isUploadedFile' => array(
                 'rule' => 'isUploadedFile',
-                'required' => true,
+                'required' => false,
                 'message' => 'It is not an upload file.'
-            )
+            ),
         )
     );
-    
+        
     // book.cakephp.org/2.0/en/core-libraries/helpers/form.html#validating-uploads
     public function isUploadedFile($data)
     {
@@ -105,29 +105,53 @@ class Employee extends AppModel
     }
     
     /* create new employee with $data provided
+     * handle uploaded imgage
      * return success or not
      */
-    public function createEmployee($data)
+    public function saveEmployee($data)
     {
+        // unset photo if there is no photo name (user don't upload image)
+        if (!$data['Employee']['photo']['name']) {
+            unset($data['Employee']['photo']);
+        }
+        
         $this->set($data);
         if ($this->validates()) {
-            // generate new image name
-            $imagename = uniqid() . '_' . $data['Employee']['photo']['name'];
-            
-            /* move uploaded file to webroot/files folder
-             * make sure that this folder is writable
-             */
-            if (move_uploaded_file(
-                $data['Employee']['photo']['tmp_name'],
-                WWW_ROOT . 'files' . DS . $imagename
-            )) {
-                // save file name to DB
-                $data['Employee']['photo'] = $imagename;
-                $this->create();
-                // data has been validated above, don't need to be again, 'validate' => false
+            // if user upload image
+            if (isset($data['Employee']['photo'])) {
+                // generate new image name
+                $imagename = uniqid() . '_' . $data['Employee']['photo']['name'];
+
+                /* move uploaded file to webroot/files folder
+                 * make sure that this folder is writable
+                 */
+                if (move_uploaded_file(
+                    $data['Employee']['photo']['tmp_name'],
+                    WWW_ROOT . 'files' . DS . $imagename
+                )) {
+                    // save file name to DB
+                    $data['Employee']['photo'] = $imagename;
+                    if (!$this->id) {
+                        // this is add, not update
+                        $this->create();
+                    }
+                    // data has been validated above, don't need to be again, 'validate' => false
+                    return $this->save($data, array('validate' => false));
+                }
+            } else {
+                // if user don't upload image
                 return $this->save($data, array('validate' => false));
             }
         }
         return false;
+    }
+    
+    /* get profile of employee specified by $id
+     * (duplication of Department->getDepartmentDetail())
+     */
+    public function getEmployeeProfile($id)
+    {
+        $this->recursive = 0;
+        return $this->findById($id);
     }
 }
