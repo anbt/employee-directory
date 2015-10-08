@@ -34,8 +34,10 @@ else :
             echo $this->Html->link(
                 'Employees', 
                 array(
-                    'controller' => '#',
-                    'action' => '#'),
+                    'controller' => 'employees',
+                    'action' => 'index',
+                    '?' => array('department_id' => $dep['Department']['id'])
+                ),
                 array(
                     'class' => array('btn', 'btn-primary')
                 )

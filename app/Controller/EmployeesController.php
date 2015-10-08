@@ -17,13 +17,13 @@ class EmployeesController extends AppController
             
             // prepare for search conditions
             $cons = array();
-            if ($this->request->query['name']) {
+            if (isset($this->request->query['name']) && $this->request->query['name']) {
                 // prepare for search LIKE
                 $texts = explode(' ', $this->request->query['name']);
                 $likeClause = '%' . implode('%', $texts) . '%';
                 $cons['Employee.name LIKE'] = $likeClause;
             }
-            if ($this->request->query['department_id']) {
+            if (isset($this->request->query['department_id']) && $this->request->query['department_id']) {
                 $cons['Employee.department_id'] = $this->request->query['department_id'];
             }
             
@@ -102,7 +102,7 @@ class EmployeesController extends AppController
         }
         
         // get departments to choose working place for employees
-        $deps = $this->Employee->WorkingIn->getAllDepartments();
+        $deps = $this->Employee->WorkingIn->getAllDepartment();
         $departments = array();
         foreach ($deps as $dep) {
             $departments[$dep['WorkingIn']['id']] = $dep['WorkingIn']['name'];
