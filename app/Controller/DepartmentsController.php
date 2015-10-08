@@ -20,13 +20,13 @@ class DepartmentsController extends AppController
     public function add()
     {
         // get employess to choose a manager in form
-        $ems = $this->Department->getAllEmployees();
+        $ems = $this->Department->Employees->getAllEmployees();
         $managers = array();
         foreach ($ems as $em) {
             $managers[$em['Employees']['id']] = $em['Employees']['name'];
         }
         $this->set("managers", $managers);
-            
+
         if ($this->request->is(array("post", "put"))) {
             $this->Department->create();
             if ($this->Department->save($this->request->data)) {
@@ -68,7 +68,7 @@ class DepartmentsController extends AppController
         }
         
         // get employess to choose a manager in form
-        $ems = $this->Department->getAllEmployees();
+        $ems = $this->Department->Employees->getAllEmployees();
         $managers = array();
         foreach ($ems as $em) {
             $managers[$em['Employees']['id']] = $em['Employees']['name'];

@@ -2,7 +2,6 @@
 
 App::uses('AppModel', 'Model');
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
-App::uses('CakeEmail', 'Network/Email');
 
 class User extends AppModel
 {
@@ -84,42 +83,50 @@ class User extends AppModel
         return (strcmp($data['confirm'], $this->data['User']['password']) == 0);
     }
     
-    public function beforeSave($options = array()) {
+    public function beforeSave($options = array()) 
+    {
         if ($this->id) {
             // there is an id, this is an updating save
             $hasher = new SimplePasswordHasher();
             $this->data['User']['password'] = $hasher->hash($this->data['User']['password']);
             // user has changed pass
             $this->data['User']['changed_pass'] = 1;
-        }
+        }        
         return true;
     }
     
-    // init pass for user with username provided and set change_pass = 0
-    public function initPassAndState($username, $genPass)
+    /* create new user with username and email provided
+     * return success or not (and non-ecrypted generated password)
+     */
+    public function createUser($data)
     {
-        $hasher = new SimplePasswordHasher();
-        $hashedGenPass = $hasher->hash($genPass);
-        // add "'" to get correct sql syntax
-        return $this->updateAll(
-            array(
-                'password' => "'" . $hashedGenPass . "'",
-                'changed_pass' => false
-            ),
-            array('username' => $username)
-        );
+        // validate first
+        $this->set($data);
+        if ($this->validates()) {
+            // init pass for user with username provided and set change_pass = false
+            $pass = $this->genPass();
+            $hasher = new SimplePasswordHasher();
+            $this->data['User']['password'] = $hasher->hash($pass);
+            $this->data['User']['changed_pass'] = false;
+            
+            // data has been validated above, don't need to be again, 'validate' => false
+            $success = $this->save($data, array('validate' => false));
+            return array("success" => $success, "password" => $pass);
+        }
+        return array("success" => false);
     }
     
-    /* send username and pass to user via mail
-     * ---------------------------------------
-     * to send successfully (using gmail), config email in Config/email.php
-     * and turn on "Access for less secure apps" in google account settings
-     */
-    public function sendEmail($address, $username, $pass) {
-        $subject = 'You now are an user of Employees Directory!';
-        $body = 'Your username : ' . $username . '. Your password : ' . $pass . '. (not include the last period)';
+    // generate pass with length provided
+    protected function genPass($length = 15)
+    {
+        $pass = '';
+        // character allowed in pass
+        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()';
+        $charsLength = strlen($chars);
         
-        $email = new CakeEmail('smtp');
-        $email->to($address)->subject($subject)->send($body);
+        for ($i = 0; $i < $length; ++$i) {
+            $pass .= $chars[rand(0, $charsLength - 1)];
+        }
+        return $pass;
     }
 }

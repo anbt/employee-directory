@@ -35,11 +35,11 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
     <!-- add navbar here later -->
     <div id="header" class="container">
     <?php 
-        if ($loggedIn === true) {
+        if ($loggedIn === true) :
             echo $this->element("Navbar/navbar_for_user");
-        } else {
+        else :
             echo $this->element("Navbar/navbar_for_guest");
-        }
+        endif;
     ?>
     </div>
     <div id="content" class="container">

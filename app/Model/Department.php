@@ -24,22 +24,25 @@ class Department extends AppModel
         'name' => array(
             'between' => array(
                 'rule' => array('lengthBetween', 3, 256),
+                'required' => true,
                 'message' => 'Name length must be between 3 and 256.'
             )
         ),
         'office_phone' => array(
             'isPhoneNum' => array(
                 'rule' => array('phone', '/^\d{10,11}$/', 'all'),
+                'required' => true,
+                'allowEmpty' => true,
                 'message' => 'Please enter a valid phone number (10-11 digits).'
             )
         ),
     );
     
-    // get all employees in database
-    public function getAllEmployees()
+    // get all departments in DB
+    public function getAllDepartments()
     {
-        $this->Employees->recursive = -1;
-        return $this->Employees->find("all", array('order' => array('name' => 'asc')));
+        $this->recursive = -1;
+        return $this->find("all", array('order' => array('name' => 'asc')));
     }
     
     // get details of department specified by $id

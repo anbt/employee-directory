@@ -1,9 +1,9 @@
 <h3>Departments</h3>
 
 <?php
-if (count($departments) == 0) {
+if (count($departments) == 0) :
     echo "<p>There is no department</p>";
-} else {
+else :
 ?>
 
 <table class="table table-stripped table-responsive">
@@ -69,8 +69,9 @@ if (count($departments) == 0) {
     </tr>
     <?php endforeach; ?>
 </table>
-<?php }
-if ($loggedIn) {
+<?php 
+endif;
+if ($loggedIn) :
     echo $this->Html->link("Add department", array('controller' => 'departments', 'action' => 'add'));
-}
+endif;
 ?>

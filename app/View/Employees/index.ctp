@@ -1,9 +1,9 @@
 <h3>Employees</h3>
 
 <?php
-if (count($employees) == 0) {
+if (count($employees) == 0) :
     echo "<p>There is no employee</p>";
-} else {
+else :
 ?>
 
 <table class="table table-stripped table-responsive">
@@ -61,8 +61,9 @@ if (count($employees) == 0) {
     </tr>
     <?php endforeach; ?>
 </table>
-<?php }
-if ($loggedIn) {
+<?php 
+endif;
+if ($loggedIn) :
     echo $this->Html->link("Add employee", array('controller' => 'employees', 'action' => 'add'));
-}
+endif;
 ?>

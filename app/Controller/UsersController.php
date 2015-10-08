@@ -2,6 +2,7 @@
 
 App::uses('AppController', 'Controller');
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
+App::uses('CakeEmail', 'Network/Email');
 
 class UsersController extends AppController
 {
@@ -38,26 +39,20 @@ class UsersController extends AppController
     public function add()
     {
         if ($this->request->is(array("post", "put"))) {
-            $this->User->create();
-            if ($this->User->save($this->request->data)) {
-                // init pass for user and set change_pass = 0
-                $pass = $this->genPass();
-                $this->User->initPassAndState(
-                    $this->request->data['User']['username'],
-                    $pass
-                );
+            // $ret format is array("success" => true/false, "password" => $pass);
+            $ret = $this->User->createUser($this->request->data);
+            if ($ret['success']) {
                 // send mail to user
-                $this->User->sendEmail(
+                $this->sendEmail(
                     $this->request->data['User']['email'],
                     $this->request->data['User']['username'],
-                    $pass
+                    $ret['password']
                 );
-                
+
                 $this->Flash->success('An user has been added.');
                 return $this->redirect(array('controller' => 'departments', 'action' => 'index'));
-            } else {
-                $this->Flash->fail('Cannot add this user.');
-            }
+            } 
+            $this->Flash->fail('Cannot add this user.');
         }
     }
     
@@ -68,23 +63,22 @@ class UsersController extends AppController
             if ($this->User->save($this->request->data)) {
                 $this->Flash->success('You changed pass successfully. You should login again to make sure');
                 return $this->redirect(array('controller' => 'users', 'action' => 'logout'));
-            } else {
-                $this->Flash->fail('Your change is not successful.');
             }
+            $this->Flash->fail('Your change is not successful.');
         } 
     }
     
-    // generate pass with length provided
-    protected function genPass($length = 15)
+    /* send username and pass to user via mail
+     * ---------------------------------------
+     * to send successfully (using gmail), config email in Config/email.php
+     * and turn on "Access for less secure apps" in google account settings
+     */
+    protected function sendEmail($address, $username, $pass)
     {
-        $pass = '';
-        // character allowed in pass
-        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()';
-        $charsLength = strlen($chars);
+        $subject = 'You now are an user of Employees Directory!';
+        $body = 'Your username : ' . $username . '. Your password : ' . $pass . '. (not include the last period)';
         
-        for ($i = 0; $i < $length; ++$i) {
-            $pass .= $chars[rand(0, $charsLength - 1)];
-        }
-        return $pass;
+        $email = new CakeEmail('smtp');
+        $email->to($address)->subject($subject)->send($body);
     }
 }
