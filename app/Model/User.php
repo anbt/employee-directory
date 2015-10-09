@@ -51,7 +51,7 @@ class User extends AppModel
             'notMatchCurPass' => array(
                 'rule' => 'notMatchCurrentPassField',
                 'required' => 'update',
-                'message' => 'This field should not be similar to "Current password" field.'
+                'message' => 'This field should not be similar to "Current Password" field.'
             )
         ),
         'confirm' => array(
@@ -61,7 +61,12 @@ class User extends AppModel
         ),
     );
     
-    // check if current password field in pass-changing form is current password in DB
+    /**
+     * Check if current password field in pass-changing form is current password
+     * 
+     * @param array $data
+     * @return boolean
+     */
     public function isCurrentPass($data)
     {
         $this->id = AuthComponent::user('id');
@@ -71,13 +76,23 @@ class User extends AppModel
         return (strcmp($checkedPass, $curPass) == 0);
     }
 
-    // check if new password not match current password
+    /**
+     * Check if new password not match current password
+     * 
+     * @param array $data
+     * @return boolean
+     */
     public function notMatchCurrentPassField($data)
     {
         return (strcmp($data['password'], $this->data['User']['cur_password']) != 0);
     }
     
-    // confirm need to match new password
+    /**
+     * Check if confirm matches new password
+     * 
+     * @param array $data
+     * @return boolean
+     */
     public function matchNewPass($data)
     {
         return (strcmp($data['confirm'], $this->data['User']['password']) == 0);
@@ -95,8 +110,12 @@ class User extends AppModel
         return true;
     }
     
-    /* create new user with username and email provided
+    /**
+     * Create new user with provided username and email
      * return success or not (and non-ecrypted generated password)
+     * 
+     * @param array $data
+     * @return array
      */
     public function createUser($data)
     {
@@ -116,7 +135,12 @@ class User extends AppModel
         return array("success" => false);
     }
     
-    // generate pass with length provided
+    /**
+     * Generate pass with provided length
+     * 
+     * @param int $length
+     * @return string
+     */
     protected function genPass($length = 15)
     {
         $pass = '';

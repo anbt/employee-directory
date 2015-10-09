@@ -38,14 +38,22 @@ class Department extends AppModel
         ),
     );
     
-    // get all departments in DB
+    /**
+     * Get departments list id => name
+     * @return type
+     */
     public function getAllDepartmentNames()
     {
         $this->recursive = -1;
         return $this->find("list", array('fields' => array('id', 'name'), 'order' => array('name' => 'asc')));
     }
     
-    // get details of department specified by $id
+    /**
+     * Get detail of department specified by id
+     * 
+     * @param int $id Department Id
+     * @return array
+     */
     public function getDepartmentDetail($id)
     {
         $this->recursive = 0;
