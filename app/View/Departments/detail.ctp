@@ -1,15 +1,18 @@
 <h3>Department detail</h3>
-
-<table class="table table-stripped table-responsive">
+<div class="table-responsive">
+<table class="table table-stripped">
     <tr>
         <th>Name</th>
-        <th>Office Number</th>
-        <th>Manager</th>
+        <td><?php echo $dep['Department']['name']; ?></td>
     </tr>
     <tr>
-        <td><?php echo $dep['Department']['name']; ?></td>
+        <th>Office Number</th>
         <td><?php echo $dep['Department']['office_phone']; ?></td>
+    </tr>
+    <tr>
+        <th>Manager</th>
         <td><?php echo $dep['ManagedBy']['name']; ?></td>
     </tr>
 </table>
-<?php echo $this->Html->link("Back", array('controller' => 'departments', 'action' => 'index')); ?>
+</div>
+<?php echo $this->Html->link("Back", array('controller' => 'departments', 'action' => 'index'), array('class' => array('btn', 'btn-info'))); ?>

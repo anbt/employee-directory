@@ -70,9 +70,11 @@ class AppController extends Controller
         }
     }
     
-    // send loggedIn info to views before rendering them
+    // send loggedIn info, current controller and action to views before rendering them
     public function beforeRender()
     {
-        $this->set('loggedIn', $this->Auth->loggedIn() );
+        $this->set('loggedIn', $this->Auth->loggedIn());
+        $this->set('curController', $this->request->params['controller']);
+        $this->set('curAction', $this->request->params['action']);
     }
 }
