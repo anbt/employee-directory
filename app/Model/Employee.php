@@ -86,7 +86,12 @@ class Employee extends AppModel
         )
     );
         
-    // book.cakephp.org/2.0/en/core-libraries/helpers/form.html#validating-uploads
+    /**
+     * Check file is uploaded file
+     * @param array $data
+     * @return boolean
+     * @see http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#validating-uploads
+     */
     public function isUploadedFile($data)
     {
         $photo = $data['photo'];
@@ -96,9 +101,10 @@ class Employee extends AppModel
         }
         return false;
     }
-    
-    /* get all employees in DB
-     * (duplication of Department->getAllDepartmentNames())
+
+    /**
+     * Get employees list id => name
+     * @return type
      */
     public function getAllEmployeeNames()
     {
@@ -106,9 +112,11 @@ class Employee extends AppModel
         return $this->find("list", array('fields' => array('id', 'name'), 'order' => array('name' => 'asc')));
     }
     
-    /* create new employee with $data provided
-     * handle uploaded imgage
-     * return success or not
+    /**
+     * Create, update employee with provided data, handle uploaded image
+     * 
+     * @param array $data Employee data
+     * @return mixed Employee data on success, false otherwise
      */
     public function saveEmployee($data)
     {
@@ -119,41 +127,67 @@ class Employee extends AppModel
         
         $this->set($data);
         if ($this->validates()) {
-            // if user upload image
-            if (isset($data['Employee']['photo'])) {
-                // generate new image name
-                $imagename = uniqid() . '_' . $data['Employee']['photo']['name'];
+            // if user don't upload image
+            if (!isset($data['Employee']['photo'])) {
+                return $this->save($data, array('validate' => false));
+            }
+            
+            // if user uploads image
+            // generate new image name
+            $imagename = uniqid() . '_' . $data['Employee']['photo']['name'];
 
-                /* move uploaded file to webroot/files folder
-                 * make sure that this folder is writable
-                 */
-                if (move_uploaded_file(
-                    $data['Employee']['photo']['tmp_name'],
-                    WWW_ROOT . 'files' . DS . $imagename
-                )) {
-                    // save file name to DB
-                    $data['Employee']['photo'] = $imagename;
-                    if (!$this->id) {
-                        // this is add, not update
-                        $this->create();
-                    }
-                    // data has been validated above, don't need to be again, 'validate' => false
-                    return $this->save($data, array('validate' => false));
+            /* move uploaded file to webroot/files folder
+             * make sure that this folder is writable
+             */
+            if (move_uploaded_file(
+                $data['Employee']['photo']['tmp_name'], WWW_ROOT . 'files' . DS . $imagename
+            )) {
+                // save file name to DB
+                $data['Employee']['photo'] = $imagename;
+                if (!$this->id) {
+                    // this is add, not update
+                    $this->create();
                 }
-            } else {
-                // if user don't upload image
+                // data has been validated above, don't need to be again, 'validate' => false
                 return $this->save($data, array('validate' => false));
             }
         }
         return false;
     }
-    
-    /* get profile of employee specified by $id
-     * (duplication of Department->getDepartmentDetail())
+
+    /**
+     * Get profile of employee specified by id
+     * 
+     * @param int $id Employee Id
+     * @return array
      */
     public function getEmployeeProfile($id)
     {
         $this->recursive = 0;
         return $this->findById($id);
+    }
+    
+    /**
+     * Search employees
+     * 
+     * @param string|null $name Employee name
+     * @param int|null $departmentId Department Id
+     * @return array Employees list
+     */ 
+    public function search($name = null, $departmentId = null)
+    {
+        $cons = array();
+        if (!empty($name)) {
+            // prepare for search LIKE
+            $name = trim($name);
+            $name = str_replace('  ', ' ', $name);
+            $likeClause = '%' . str_replace(' ', '%', $name) . '%';
+            $cons['Employee.name LIKE'] = $likeClause;
+        }
+        if (!empty($departmentId)) {
+            $cons['Employee.department_id'] = $departmentId;
+        }
+        
+        return $this->find('all', array('conditions' => $cons));
     }
 }

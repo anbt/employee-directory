@@ -4,6 +4,8 @@ App::uses('AppController', 'Controller');
 
 class EmployeesController extends AppController
 {
+    public $uses = array('Employee');
+    
     public function beforeFilter() {
         parent::beforeFilter();
         $this->Auth->allow("profile");
@@ -11,31 +13,13 @@ class EmployeesController extends AppController
     
     public function index()
     {
-        if ($this->request->query) {
-            // this is a search request, params in query array
-            $this->Employee->recursive = 0;
-            
-            // prepare for search conditions
-            $cons = array();
-            if (isset($this->request->query['name']) && $this->request->query['name']) {
-                // prepare for search LIKE
-                $texts = explode(' ', $this->request->query['name']);
-                $likeClause = '%' . implode('%', $texts) . '%';
-                $cons['Employee.name LIKE'] = $likeClause;
-            }
-            if (isset($this->request->query['department_id']) && $this->request->query['department_id']) {
-                $cons['Employee.department_id'] = $this->request->query['department_id'];
-            }
-            
-            $emps = $this->Employee->find("all", array('conditions' => $cons));
-            $this->set("employees", $emps);
-        } else {
-            // no search request, just show all employees
-            // set recursive = 0 to retrive department's relationship
-            $this->Employee->recursive = 0;
-            $emps = $this->Employee->find("all");
-            $this->set("employees", $emps);
+        $emps = $this->Employee->search($this->request->query('name'), $this->request->query('department_id'));
+        $this->set("employees", $emps);
+        
+        if (!$this->request->data) {
+            $this->request->data['Employee'] = $this->request->query;
         }
+        
         // get departments to search in "index view"
         $departments = $this->Employee->WorkingIn->getAllDepartmentNames();
         $this->set("departments", $departments);
