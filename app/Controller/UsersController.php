@@ -6,6 +6,8 @@ App::uses('CakeEmail', 'Network/Email');
 
 class UsersController extends AppController
 {
+    public $uses = array('User');
+    
     public function beforeFilter()
     {
         // allow logout even having not changed pass
@@ -60,6 +62,10 @@ class UsersController extends AppController
     {
         if ($this->request->is(array("post", "put"))) {
             $this->User->id = $this->Auth->user('id');
+            $this->User->addCurrentPasswordValidator();
+            $this->User->addPasswordConfirmValidator();
+            $this->User->addNewPassNotMatchCurPassValidator();
+            $this->request->data['User']['changed_pass'] = true;
             if ($this->User->save($this->request->data)) {
                 $this->Flash->success('You changed pass successfully. You should login again to make sure');
                 return $this->redirect(array('controller' => 'users', 'action' => 'logout'));
