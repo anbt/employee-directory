@@ -51,7 +51,7 @@ class UsersController extends AppController
 
                 $this->Flash->success('An user has been added.');
                 return $this->redirect(array('controller' => 'departments', 'action' => 'index'));
-            } 
+            }
             $this->Flash->fail('Cannot add this user.');
         }
     }
@@ -65,7 +65,7 @@ class UsersController extends AppController
                 return $this->redirect(array('controller' => 'users', 'action' => 'logout'));
             }
             $this->Flash->fail('Your change is not successful.');
-        } 
+        }
     }
     
     /* send username and pass to user via mail
