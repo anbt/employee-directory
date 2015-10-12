@@ -6,7 +6,18 @@
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <?php echo $this->Form->create('Employee', array('type' => 'file')); ?>
+                    <?php 
+                        echo $this->Form->create(
+                            'Employee',
+                            array(
+                                'type' => 'file',
+                                'inputDefaults' => array(
+                                    'class' => 'form-control',
+                                    'div' => array('class' => 'form-group')
+                                )
+                            )
+                        ); 
+                    ?>
                     <div class="col-lg-5 col-md-5 col-sm-5">
                         <?php 
                             echo $this->Html->image(
@@ -21,7 +32,9 @@
                                 array(
                                     'type' => 'file',
                                     'label' => false,
-                                    'required' => false
+                                    'required' => false,
+                                    'class' => false,
+                                    'div' => false
                                 )
                             );
                         ?>
@@ -31,9 +44,7 @@
                             echo $this->Form->input(
                                 'name',
                                 array(
-                                    'label' => 'Employee Name',
-                                    'class' => 'form-control',
-                                    'div' => array('class' => 'form-group')
+                                    'label' => 'Employee Name'
                                 )
                             );
                             echo $this->Form->input(
@@ -41,32 +52,12 @@
                                 array(
                                     'options' => $departments,
                                     'empty' => '',
-                                    'label' => 'Department',
-                                    'class' => 'form-control',
-                                    'div' => array('class' => 'form-group')
+                                    'label' => 'Department'
                                 )
                             );
-                            echo $this->Form->input(
-                                'job_title',
-                                array(
-                                    'class' => 'form-control',
-                                    'div' => array('class' => 'form-group')
-                                )
-                            );
-                            echo $this->Form->input(
-                                'cellphone',
-                                array(
-                                    'class' => 'form-control',
-                                    'div' => array('class' => 'form-group')
-                                )
-                            );
-                            echo $this->Form->input(
-                                'email',
-                                array(
-                                    'class' => 'form-control',
-                                    'div' => array('class' => 'form-group')
-                                )
-                            );
+                            echo $this->Form->input('job_title');
+                            echo $this->Form->input('cellphone');
+                            echo $this->Form->input('email');
                             echo $this->Form->submit(
                                 'Edit',
                                 array(

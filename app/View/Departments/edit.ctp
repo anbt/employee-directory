@@ -6,29 +6,23 @@
             </div>
             <div class="panel-body">
                 <?php
-                    echo $this->Form->create('Department');
-                    echo $this->Form->input(
-                        'name',
+                    echo $this->Form->create(
+                        'Department',
                         array(
-                            'class' => 'form-control',
-                            'div' => array('class' => 'form-group')
+                            'inputDefaults' => array(
+                                'class' => 'form-control',
+                                'div' => array('class' => 'form-group')
+                            )
                         )
                     );
-                    echo $this->Form->input(
-                        'office_phone',
-                        array(
-                            'class' => 'form-control',
-                            'div' => array('class' => 'form-group')
-                        )
-                    );
+                    echo $this->Form->input('name');
+                    echo $this->Form->input('office_phone');
                     echo $this->Form->input(
                         'manager_id',
                         array(
                             'options' => $managers,
                             'empty' => '',
-                            'label' => 'Manager',
-                            'class' => 'form-control',
-                            'div' => array('class' => 'form-group')
+                            'label' => 'Manager'
                         )
                     );
                     echo $this->Form->submit(

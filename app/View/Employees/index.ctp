@@ -24,15 +24,23 @@ else :
     </div>
     <div class="panel-body">
 <?php
-    echo $this->Form->create('Employee', array('type' => 'get', 'class' => 'form-inline'));
+    echo $this->Form->create(
+        'Employee',
+        array(
+            'type' => 'get',
+            'class' => 'form-inline',
+            'inputDefaults' => array(
+                'class' => 'form-control',
+                'div' => array('class' => 'form-group')
+            )
+        )
+    );
     echo $this->Form->input(
         'name',
         array(
             'placeholder' => 'Employee Name',
             'label' => false,
-            'required' => false,
-            'class' => array('form-control'),
-            'div' => array('class' => 'form-group')
+            'required' => false
         )
     );
     echo $this->Form->input(
@@ -40,12 +48,10 @@ else :
         array(
             'options' => $departments,
             'empty' => 'Departments',
-            'label' => false,
-            'class' => array('form-control'),
-            'div' => array('class' => 'form-group')
+            'label' => false
         )
     );
-    echo $this->Form->submit('Search', array('div' => false, 'class' => array('btn', 'btn-success')));
+    echo $this->Form->submit('Search', array('div' => array('class' => 'form-group'), 'class' => array('btn', 'btn-success')));
     echo $this->Form->button('Clear', array('type' => 'reset', 'class' => array('btn', 'btn-info')));
     echo $this->Form->end();
 ?>

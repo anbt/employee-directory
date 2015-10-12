@@ -6,19 +6,17 @@
     </div>
     <div class="panel-body">
         <?php
-            echo $this->Form->create('User');
-            echo $this->Form->input(
-                'username', array(
-                    'class' => 'form-control',
-                    'div' => array('class' => 'form-group')
+            echo $this->Form->create(
+                'User',
+                array(
+                    'inputDefaults' => array(
+                        'class' => 'form-control',
+                        'div' => array('class' => 'form-group')
+                    )
                 )
             );
-            echo $this->Form->input(
-                'email', array(
-                    'class' => 'form-control',
-                    'div' => array('class' => 'form-group')
-                )
-            );
+            echo $this->Form->input('username');
+            echo $this->Form->input('email');
             echo $this->Form->submit(
                 'Add',
                 array(

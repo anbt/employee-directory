@@ -11,12 +11,18 @@
                     And you should not use the password we provided via mail, ever again.
                 </p>
                 <?php
-                    echo $this->Form->create('User');
+                    echo $this->Form->create(
+                        'User',
+                        array(
+                            'inputDefaults' => array(
+                                'class' => 'form-control',
+                                'div' => array('class' => 'form-group')
+                            )
+                        )
+                    );
                     echo $this->Form->input(
                         'cur_password',
                         array(
-                            'class' => 'form-control',
-                            'div' => array('class' => 'form-group'),
                             'label' => 'Current Password',
                             'type' => 'password'
                         )
@@ -24,16 +30,12 @@
                     echo $this->Form->input(
                         'password',
                         array(
-                            'class' => 'form-control',
-                            'div' => array('class' => 'form-group'),
                             'label' => 'New Password'
                         )
                     );
                     echo $this->Form->input(
                         'confirm',
                         array(
-                            'class' => 'form-control',
-                            'div' => array('class' => 'form-group'),
                             'type' => 'password'
                         )
                     );
